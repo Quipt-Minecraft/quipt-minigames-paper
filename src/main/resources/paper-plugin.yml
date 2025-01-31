@@ -1,0 +1,11 @@
+name: "${name}"
+version: "${plugin_version}"
+main: me.quickscythe.quipt.minigames.PaperEntrypoint
+author: "${author}"
+api-version: "${minecraft_version}"
+loader: me.quickscythe.quipt.minigames.PaperLoader
+dependencies:
+  server:
+    quipt-paper:
+      load: BEFORE
+      required: true
