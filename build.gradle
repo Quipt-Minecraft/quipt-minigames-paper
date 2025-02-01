@@ -127,3 +127,4 @@ tasks.register('copyGradleProperties', Copy) {
 }
 
 tasks.processResources.dependsOn(copyGradleProperties)
+tasks.sourcesJar.dependsOn(copyGradleProperties)
