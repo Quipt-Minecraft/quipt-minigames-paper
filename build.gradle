@@ -1,4 +1,3 @@
-import java.awt.Color
 
 plugins {
     id 'java-library'
@@ -26,27 +25,17 @@ repositories {
     }
 }
 
-configurations {
-    pluginJars
-}
-
 dependencies {
 
     implementation "io.papermc.paper:paper-api:${minecraft_version}-${paper_version}"
 
-    pluginJars "me.quickscythe:quipt-core:${quipt_core_version}"
-    pluginJars "me.quickscythe:quipt-paper:${quipt_paper_version}"
-
     implementation "me.quickscythe:quipt-core:${quipt_core_version}"
     implementation "me.quickscythe:quipt-paper:${quipt_paper_version}"
-
     implementation "org.json:json:$json_version"
-    implementation "org.eclipse.jgit:org.eclipse.jgit:$jgit_version"
 }
 tasks {
     runServer {
         minecraftVersion("${minecraft_version}")
-        pluginJars.from(configurations.pluginJars)
     }
 }
 
@@ -64,11 +53,12 @@ java {
 
 
 processResources {
-    def props = [minecraft_version: minecraft_version, author: author, name: rootProject.name, plugin_version: plugin_version]
-    inputs.properties props
+    def pluginProperties = [minecraft_version: minecraft_version, author: author, name: rootProject.name, plugin_version: plugin_version]
+    inputs.properties pluginProperties
     filteringCharset 'UTF-8'
+
     filesMatching('paper-plugin.yml') {
-        expand props
+        expand pluginProperties
     }
 }
 
@@ -131,3 +121,9 @@ publishing {
 //
 //tasks.modrinth.dependsOn sendDataToUrl
 
+tasks.register('copyGradleProperties', Copy) {
+    from 'gradle.properties'
+    into "src/main/resources/"
+}
+
+tasks.processResources.dependsOn(copyGradleProperties)
