@@ -4,6 +4,8 @@ package me.quickscythe.quipt.minigames.core;
 import me.quickscythe.quipt.minigames.core.arenas.Arena;
 import me.quickscythe.quipt.minigames.core.arenas.ArenaDefinition;
 import me.quickscythe.quipt.minigames.core.objects.MinigamePlayer;
+import me.quickscythe.quipt.minigames.core.teams.TeamDefinition;
+import me.quickscythe.quipt.minigames.utils.MinigamesUtils;
 import me.quickscythe.quipt.utils.chat.MessageUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,11 +17,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.text;
@@ -49,10 +51,28 @@ public abstract class Minigame {
 
     public abstract Listener listener();
 
-    public abstract void end();
-
     public abstract boolean check();
 
+    public void end() {
+        Bukkit.getScheduler().runTaskLater(MinigamesUtils.plugin(), new MinigameCountdown(
+                this,
+                5,
+                null,
+                null,
+                () -> true,
+                () -> {
+                    try {
+                        destroy();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                },
+                () -> {
+                    //There was an error?
+                }
+        ), 0);
+
+    }
 
     public Arena arena() {
         return arena;
@@ -210,18 +230,16 @@ public abstract class Minigame {
     public void spectate(@NotNull Player player) {
         players().remove(player.getUniqueId());
         if (!spectators().contains(player.getUniqueId())) spectators().add(player.getUniqueId());
-        System.out.println(player.getLocation().y());
         if (player.getLocation().y() <= 0) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 player.teleport(arenaDefinition.locations().lobby().location(arena));
             }, 1);
-//            player.teleport(player.getLocation().clone().add(0,100,0));
-//            System.out.println("true");
-//            Location location = arenaDefinition.locations().lobby().location(arena);
-//            System.out.println(location.y());
-//            System.out.println("Teleported? " + player.teleport(location));
         }
         player.setGameMode(GameMode.SPECTATOR);
 
+    }
+
+    public @Nullable TeamDefinition team(Player player) {
+        return null;
     }
 }

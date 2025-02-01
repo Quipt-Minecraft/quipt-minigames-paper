@@ -7,6 +7,7 @@ import me.quickscythe.quipt.minigames.commands.MinigameCommand;
 import me.quickscythe.quipt.minigames.core.Minigame;
 import me.quickscythe.quipt.minigames.core.MinigameManager;
 import me.quickscythe.quipt.minigames.core.arenas.ArenaManager;
+import me.quickscythe.quipt.minigames.core.templates.SkyWars;
 import me.quickscythe.quipt.minigames.core.templates.Spleef;
 import me.quickscythe.quipt.minigames.core.templates.TestMinigame;
 import me.quickscythe.quipt.utils.chat.MessageUtils;
@@ -37,6 +38,7 @@ public class MinigamesUtils {
 
         MinigameManager.registerMinigame(Spleef.class);
         MinigameManager.registerMinigame(TestMinigame.class);
+        MinigameManager.registerMinigame(SkyWars.class);
 
         HeartbeatUtils.init(plugin);
 

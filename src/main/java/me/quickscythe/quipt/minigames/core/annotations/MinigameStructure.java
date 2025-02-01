@@ -27,6 +27,8 @@ public @interface MinigameStructure {
     boolean DEFAULT_CAN_USE_VEHICLES = false;
     boolean DEFAULT_CAN_USE_MOBS = false;
     boolean DEFAULT_CAN_USE_ANIMALS = false;
+    boolean DEFAULT_FRIENDLY_FIRE = false;
+    boolean DEFAULT_CAN_TAKE_FALL_DAMAGE = false;
 
 
     String name();
@@ -76,5 +78,9 @@ public @interface MinigameStructure {
     boolean canUseMobs() default DEFAULT_CAN_USE_MOBS;
 
     boolean canUseAnimals() default DEFAULT_CAN_USE_ANIMALS;
+
+    boolean friendlyFire() default DEFAULT_FRIENDLY_FIRE;
+
+    boolean canTakeFallDamage() default DEFAULT_CAN_TAKE_FALL_DAMAGE;
 
 }

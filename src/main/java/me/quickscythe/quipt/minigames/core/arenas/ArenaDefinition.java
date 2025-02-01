@@ -42,6 +42,10 @@ public class ArenaDefinition {
         }
     }
 
+    public TeamDefinition[] teams(){
+        return teams;
+    }
+
     public Metadata metadata(){
         return metadata;
     }

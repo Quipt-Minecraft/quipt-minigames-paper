@@ -4,7 +4,7 @@ import me.quickscythe.quipt.minigames.core.annotations.MinigameStructure;
 
 import java.util.Optional;
 
-public record MinigameSettings(String name, Optional<String> description, Optional<String[]> rules, String[] arenas, int minPlayers, int maxPlayer, boolean canJoinInProgress, boolean canSpectate, boolean canRespawn, boolean canBreakBlocks, boolean canPlaceBlocks, boolean canDropItems, boolean canPickupItems, boolean canDamagePlayers, boolean canDamageMobs, boolean canDamageAnimals, boolean canDamageVehicles, boolean canDamageBlocks, boolean canUseItems, boolean canUseBlocks, boolean canUseVehicles, boolean canUseMobs, boolean canUseAnimals){
+public record MinigameSettings(String name, Optional<String> description, Optional<String[]> rules, String[] arenas, int minPlayers, int maxPlayer, boolean canJoinInProgress, boolean canSpectate, boolean canRespawn, boolean canBreakBlocks, boolean canPlaceBlocks, boolean canDropItems, boolean canPickupItems, boolean canDamagePlayers, boolean canDamageMobs, boolean canDamageAnimals, boolean canDamageVehicles, boolean canDamageBlocks, boolean canUseItems, boolean canUseBlocks, boolean canUseVehicles, boolean canUseMobs, boolean canUseAnimals, boolean friendlyFire, boolean canTakeFallDamage) {
 
     public static Builder builder(String name){
         return new Builder(name);
@@ -37,6 +37,8 @@ public record MinigameSettings(String name, Optional<String> description, Option
                 .build();
     }
 
+
+
     public static class Builder{
 
         private final String name;
@@ -63,6 +65,8 @@ public record MinigameSettings(String name, Optional<String> description, Option
         private boolean canUseVehicles = MinigameStructure.DEFAULT_CAN_USE_VEHICLES;
         private boolean canUseMobs = MinigameStructure.DEFAULT_CAN_USE_MOBS;
         private boolean canUseAnimals = MinigameStructure.DEFAULT_CAN_USE_ANIMALS;
+        private boolean friendlyFire = MinigameStructure.DEFAULT_FRIENDLY_FIRE;
+        private boolean canTakeFallDamage = MinigameStructure.DEFAULT_CAN_TAKE_FALL_DAMAGE;
 
         public Builder(String name){
             this.name = name;
@@ -179,8 +183,44 @@ public record MinigameSettings(String name, Optional<String> description, Option
             return this;
         }
 
+        public Builder friendlyFire(boolean friendlyFire){
+            this.friendlyFire = friendlyFire;
+            return this;
+        }
+
+        public Builder canTakeFallDamage(boolean canTakeFallDamage){
+            this.canTakeFallDamage = canTakeFallDamage;
+            return this;
+        }
+
         public MinigameSettings build(){
-            return new MinigameSettings(name, description, rules, arenas, minPlayers, maxPlayer, canJoinInProgress, canSpectate, canRespawn, canBreakBlocks, canPlaceBlocks, canDropItems, canPickupItems, canDamagePlayers, canDamageMobs, canDamageAnimals, canDamageVehicles, canDamageBlocks, canUseItems, canUseBlocks, canUseVehicles, canUseMobs, canUseAnimals);
+            return new MinigameSettings(
+                    name,
+                    description,
+                    rules,
+                    arenas,
+                    minPlayers,
+                    maxPlayer,
+                    canJoinInProgress,
+                    canSpectate,
+                    canRespawn,
+                    canBreakBlocks,
+                    canPlaceBlocks,
+                    canDropItems,
+                    canPickupItems,
+                    canDamagePlayers,
+                    canDamageMobs,
+                    canDamageAnimals,
+                    canDamageVehicles,
+                    canDamageBlocks,
+                    canUseItems,
+                    canUseBlocks,
+                    canUseVehicles,
+                    canUseMobs,
+                    canUseAnimals,
+                    friendlyFire,
+                    canTakeFallDamage
+            );
         }
     }
 }

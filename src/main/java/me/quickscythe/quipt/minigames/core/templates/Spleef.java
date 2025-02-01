@@ -1,13 +1,10 @@
 package me.quickscythe.quipt.minigames.core.templates;
 
-import me.quickscythe.quipt.minigames.core.annotations.MinigameStructure;
-import me.quickscythe.quipt.minigames.utils.MinigamesUtils;
 import me.quickscythe.quipt.minigames.core.Minigame;
-import me.quickscythe.quipt.minigames.core.MinigameCountdown;
 import me.quickscythe.quipt.minigames.core.MinigameManager;
 import me.quickscythe.quipt.minigames.core.MinigameSettings;
+import me.quickscythe.quipt.minigames.core.annotations.MinigameStructure;
 import me.quickscythe.quipt.minigames.core.arenas.ArenaDefinition;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,32 +47,9 @@ public class Spleef extends Minigame {
     }
 
     @Override
-    public void end() {
-        Bukkit.getScheduler().runTaskLater(MinigamesUtils.plugin(), new MinigameCountdown(
-                this,
-                5,
-                null,
-                null,
-                ()-> true,
-                ()->{
-                    try {
-                        destroy();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                },
-                ()->{
-                    //There was an error?
-                }
-        ), 0);
-
-    }
-
-    @Override
     public boolean check() {
         return players().size() == 1;
     }
-
 
     class GameListener implements Listener {
 
@@ -84,8 +58,6 @@ public class Spleef extends Minigame {
             if (MinigameManager.getMinigame(e.getPlayer()) != Spleef.this) return;
             if (started() > 0 && layers.contains(e.getBlock().getType().name().toLowerCase(Locale.ROOT)))
                 e.getBlock().setType(Material.AIR);
-
-
         }
     }
 }
