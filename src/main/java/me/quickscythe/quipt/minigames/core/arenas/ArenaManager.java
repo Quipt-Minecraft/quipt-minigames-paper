@@ -2,6 +2,7 @@ package me.quickscythe.quipt.minigames.core.arenas;
 
 import me.quickscythe.quipt.api.QuiptIntegration;
 import me.quickscythe.quipt.api.config.ConfigManager;
+import me.quickscythe.quipt.utils.PaperIntegration;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -17,7 +18,7 @@ public class ArenaManager {
 
     private static final Map<String, ArenaDefinition> arenas = new HashMap<>();
 
-    public static void init(QuiptIntegration integration) throws IOException {
+    public static void init(PaperIntegration integration) {
         arenaFolder = new File(integration.dataFolder(), "arenas");
         if(!arenaFolder.exists()) integration.log("ArenaManager", "Creating arena folder..." + (arenaFolder.mkdirs() ? "Success!" : "Failed!"));
 

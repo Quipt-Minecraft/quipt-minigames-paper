@@ -54,23 +54,24 @@ public abstract class Minigame {
     public abstract boolean check();
 
     public void end() {
-        Bukkit.getScheduler().runTaskLater(MinigamesUtils.plugin(), new MinigameCountdown(
-                this,
-                5,
-                null,
-                null,
-                () -> true,
-                () -> {
-                    try {
-                        destroy();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+        if (MinigamesUtils.integration().plugin().isPresent())
+            Bukkit.getScheduler().runTaskLater(MinigamesUtils.integration().plugin().get(), new MinigameCountdown(
+                    this,
+                    5,
+                    null,
+                    null,
+                    () -> true,
+                    () -> {
+                        try {
+                            destroy();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    },
+                    () -> {
+                        //There was an error?
                     }
-                },
-                () -> {
-                    //There was an error?
-                }
-        ), 0);
+            ), 0);
 
     }
 

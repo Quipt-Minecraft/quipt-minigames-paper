@@ -27,6 +27,10 @@ repositories {
 
 dependencies {
 
+    testImplementation platform("org.junit:junit-bom:$junit_version")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testImplementation "ch.qos.logback:logback-classic:$logback_version"
+
     implementation "io.papermc.paper:paper-api:${minecraft_version}-${paper_version}"
 
     implementation "me.quickscythe:quipt-core:${quipt_core_version}"

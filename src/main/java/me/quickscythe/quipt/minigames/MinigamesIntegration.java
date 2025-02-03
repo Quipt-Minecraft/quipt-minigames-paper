@@ -2,36 +2,50 @@ package me.quickscythe.quipt.minigames;
 
 import me.quickscythe.quipt.api.QuiptIntegration;
 import me.quickscythe.quipt.api.logger.QuiptLogger;
-import me.quickscythe.quipt.utils.chat.Logger;
+import me.quickscythe.quipt.minigames.core.Minigame;
+import me.quickscythe.quipt.minigames.core.MinigameManager;
+import me.quickscythe.quipt.minigames.core.arenas.ArenaManager;
+import me.quickscythe.quipt.minigames.core.templates.SkyWars;
+import me.quickscythe.quipt.minigames.core.templates.Spleef;
+import me.quickscythe.quipt.minigames.core.templates.TestMinigame;
+import me.quickscythe.quipt.utils.PaperIntegration;
+import me.quickscythe.quipt.utils.chat.MessageUtils;
+import me.quickscythe.quipt.utils.heartbeat.HeartbeatUtils;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 
-public class MinigamesIntegration extends QuiptIntegration {
+import static net.kyori.adventure.text.Component.text;
 
-    private final JavaPlugin plugin;
-    private final QuiptLogger paperLogger;
-    private final File dataFolder;
+public class MinigamesIntegration extends PaperIntegration {
 
-    public MinigamesIntegration(JavaPlugin plugin) {
-        this.plugin = plugin;
-        paperLogger = new QuiptLogger(this);
-        dataFolder = plugin.getDataFolder();
+
+    public MinigamesIntegration(@Nullable JavaPlugin plugin) {
+        super(plugin);
     }
 
     @Override
     public void enable() {
-        if(!dataFolder.exists()) dataFolder.mkdirs();
-    }
+        super.enable();
+        ArenaManager.init(this);
+        MinigameManager.registerMinigame(Spleef.class);
+        MinigameManager.registerMinigame(TestMinigame.class);
+        MinigameManager.registerMinigame(SkyWars.class);
 
-    @Override
-    public void log(String tag, String message) {
-        paperLogger.log("[" + tag + "] " + message);
-    }
+        HeartbeatUtils.init(this);
 
-    @Override
-    public File dataFolder() {
-        return dataFolder;
+        MessageUtils.addMessage("minigame.common.countdown", text("").append(text("Starting in ", NamedTextColor.GRAY)).append(text("[0]", NamedTextColor.GREEN)).append(text(" seconds...", NamedTextColor.GRAY)));
+
+        HeartbeatUtils.heartbeat(this).addFlutter(() -> {
+            for (Minigame minigame : MinigameManager.minigames()) {
+                if (minigame.started() > 0 && minigame.check()) {
+                    minigame.end();
+                }
+            }
+            return true;
+        });
     }
 
     @Override

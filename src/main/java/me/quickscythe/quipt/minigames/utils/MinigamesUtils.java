@@ -10,6 +10,7 @@ import me.quickscythe.quipt.minigames.core.arenas.ArenaManager;
 import me.quickscythe.quipt.minigames.core.templates.SkyWars;
 import me.quickscythe.quipt.minigames.core.templates.Spleef;
 import me.quickscythe.quipt.minigames.core.templates.TestMinigame;
+import me.quickscythe.quipt.utils.PaperIntegration;
 import me.quickscythe.quipt.utils.chat.MessageUtils;
 import me.quickscythe.quipt.utils.heartbeat.HeartbeatUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -23,42 +24,15 @@ import static net.kyori.adventure.text.Component.text;
 public class MinigamesUtils {
 
 
-    private static QuiptIntegration integration;
-    private static JavaPlugin plugin;
+    private static PaperIntegration integration;
 
-    public static void init(JavaPlugin plugin) throws IOException {
-        MinigamesUtils.plugin = plugin;
-        integration = new MinigamesIntegration(plugin);
+    public static void init(PaperIntegration integration) {
         integration.enable();
 
-        new CommandExecutor.Builder(new MinigameCommand(plugin)).register();
-
-        ArenaManager.init(integration);
-
-
-        MinigameManager.registerMinigame(Spleef.class);
-        MinigameManager.registerMinigame(TestMinigame.class);
-        MinigameManager.registerMinigame(SkyWars.class);
-
-        HeartbeatUtils.init(plugin);
-
-        MessageUtils.addMessage("minigame.common.countdown", text("").append(text("Starting in ", NamedTextColor.GRAY)).append(text("[0]", NamedTextColor.GREEN)).append(text(" seconds...", NamedTextColor.GRAY)));
-
-        HeartbeatUtils.heartbeat(plugin).addFlutter(() -> {
-            for (Minigame minigame : MinigameManager.minigames()) {
-                if (minigame.started() > 0 && minigame.check()) {
-                    minigame.end();
-                }
-            }
-            return true;
-        });
     }
 
-    public static QuiptIntegration integration() {
+    public static PaperIntegration integration() {
         return integration;
     }
 
-    public static @NotNull JavaPlugin plugin() {
-        return plugin;
-    }
 }

@@ -44,7 +44,7 @@ public class MinigameCountdown implements Runnable {
             if (type != null && messageKey != null) {
                 if (type == Type.CHAT) {
                     int remainingSeconds = secondsToPass - secondsPassed;
-                    if (secondsPassed == 0 || remainingSeconds == 60 || remainingSeconds == 30 || remainingSeconds == 20 ||remainingSeconds == 10 || remainingSeconds == 5 || remainingSeconds <= 3)
+                    if (secondsPassed == 0 || remainingSeconds == 60 || remainingSeconds == 30 || remainingSeconds == 20 || remainingSeconds == 10 || remainingSeconds == 5 || remainingSeconds <= 3)
                         minigame.broadcast(MessageUtils.getMessage(messageKey, String.valueOf(remainingSeconds)));
                 }
             }
@@ -56,10 +56,11 @@ public class MinigameCountdown implements Runnable {
             }
         }
 
-        Bukkit.getScheduler().runTaskLater(MinigamesUtils.plugin(), this, 1);
+        if (MinigamesUtils.integration().plugin().isPresent())
+            Bukkit.getScheduler().runTaskLater(MinigamesUtils.integration().plugin().get(), this, 1);
     }
 
-    public boolean finished(){
+    public boolean finished() {
         return finished;
     }
 
