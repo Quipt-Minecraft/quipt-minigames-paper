@@ -23,7 +23,7 @@ public class LocationManager extends NestedListManager<ArenaLocation, ArenaLocat
             double z = loc.getDouble("z");
             Float yaw = loc.has("yaw") ? (float) loc.getDouble("yaw") : null;
             Float pitch = loc.has("pitch") ? (float) loc.getDouble("pitch") : null;
-            Metadata metadata = loc.has("metadata") ? new Metadata(loc.getJSONObject("metadata")) : null;
+            Metadata metadata = loc.has("metadata") ? Metadata.of(loc.getJSONObject("metadata")) : null;
             all().add(new ArenaLocation(type, x, y, z, yaw, pitch, metadata));
         }
     }

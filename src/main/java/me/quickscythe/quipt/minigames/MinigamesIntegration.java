@@ -13,7 +13,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
-
 import static net.kyori.adventure.text.Component.text;
 
 public class MinigamesIntegration extends PaperIntegration {
@@ -31,22 +30,26 @@ public class MinigamesIntegration extends PaperIntegration {
         MinigameManager.registerMinigame(TestMinigame.class);
         MinigameManager.registerMinigame(SkyWars.class);
 
-        HeartbeatUtils.init(this);
 
         MessageUtils.addMessage("minigame.common.countdown", text("").append(text("Starting in ", NamedTextColor.GRAY)).append(text("[0]", NamedTextColor.GREEN)).append(text(" seconds...", NamedTextColor.GRAY)));
 
-        HeartbeatUtils.heartbeat(this).addFlutter(() -> {
-            for (Minigame minigame : MinigameManager.minigames()) {
-                if (minigame.started() > 0 && minigame.check()) {
-                    minigame.end();
+        if (plugin().isPresent()) {
+            HeartbeatUtils.init(this);
+            HeartbeatUtils.heartbeat(this).addFlutter(() -> {
+                for (Minigame minigame : MinigameManager.minigames()) {
+                    if (minigame.started() > 0 && minigame.check()) {
+                        minigame.end();
+                    }
                 }
-            }
-            return true;
-        });
+                return true;
+            });
+        }
     }
 
     @Override
     public String name() {
         return "quipt-minigames";
     }
+
+
 }

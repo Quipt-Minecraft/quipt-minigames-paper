@@ -44,6 +44,7 @@ public class Arena {
 
     public void loadWorld(){
 
+        if(!worldFolder.exists()) throw new IllegalStateException("World folder does not exist");
         try {
             String fileName = System.currentTimeMillis() + "-arena";
             Path source = worldFolder.toPath();

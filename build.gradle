@@ -25,6 +25,8 @@ repositories {
     }
 }
 
+
+
 dependencies {
 
     testImplementation platform("org.junit:junit-bom:$junit_version")
@@ -37,6 +39,11 @@ dependencies {
     implementation "me.quickscythe:quipt-paper:${quipt_paper_version}"
     implementation "org.json:json:$json_version"
 }
+
+test {
+    useJUnitPlatform()
+}
+
 tasks {
     runServer {
         minecraftVersion("${minecraft_version}")

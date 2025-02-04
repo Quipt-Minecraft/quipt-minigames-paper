@@ -24,7 +24,7 @@ public class ArenaDefinition {
         if(!data.has("locations")) throw new IllegalArgumentException("No locations defined for arena");
         this.locationManager = new LocationManager(data.getJSONObject("locations"));
         if(!data.has("metadata")) throw new IllegalStateException("No metadata defined for arena");
-        this.metadata = new Metadata(data.getJSONObject("metadata"));
+        this.metadata = Metadata.of(data.getJSONObject("metadata"));
         try {
             this.name = metadata.value("name", String.class);
         }catch (IllegalArgumentException e){

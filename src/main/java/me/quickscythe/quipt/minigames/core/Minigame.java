@@ -43,8 +43,14 @@ public abstract class Minigame {
         this.settings = settings;
         this.arenaDefinition = arenaDefinition;
         this.arena = new Arena(arenaDefinition);
-        arena.loadWorld();
+
         this.integration = integration;
+
+        try {
+            arena.loadWorld();
+        } catch (IllegalStateException ex){
+            integration.log("Minigame", "Failed to load world for minigame " + id + " (" + settings.name() + ")");
+        }
 
     }
 
