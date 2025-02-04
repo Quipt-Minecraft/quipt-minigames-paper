@@ -1,7 +1,5 @@
 package me.quickscythe.quipt.minigames;
 
-import me.quickscythe.quipt.api.QuiptIntegration;
-import me.quickscythe.quipt.api.logger.QuiptLogger;
 import me.quickscythe.quipt.minigames.core.Minigame;
 import me.quickscythe.quipt.minigames.core.MinigameManager;
 import me.quickscythe.quipt.minigames.core.arenas.ArenaManager;
@@ -15,7 +13,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 
 import static net.kyori.adventure.text.Component.text;
 

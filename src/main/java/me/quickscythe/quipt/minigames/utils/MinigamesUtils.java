@@ -24,14 +24,14 @@ import static net.kyori.adventure.text.Component.text;
 public class MinigamesUtils {
 
 
-    private static PaperIntegration integration;
+    private static MinigamesIntegration integration;
 
-    public static void init(PaperIntegration integration) {
+    public static void init(MinigamesIntegration integration) {
         integration.enable();
 
     }
 
-    public static PaperIntegration integration() {
+    public static MinigamesIntegration integration() {
         return integration;
     }
 

@@ -1,5 +1,6 @@
 package me.quickscythe.quipt.minigames.core;
 
+import me.quickscythe.quipt.minigames.MinigamesIntegration;
 import me.quickscythe.quipt.minigames.core.annotations.MinigameStructure;
 import me.quickscythe.quipt.minigames.core.arenas.ArenaDefinition;
 import me.quickscythe.quipt.minigames.core.objects.MinigamePlayer;
@@ -23,9 +24,9 @@ public class MinigameManager {
         minigames.put(minigameClass, MinigameSettings.convertStructure(structure));
     }
 
-    public static <M extends Minigame> M createMinigame(JavaPlugin plugin, Class<M> minigameClass, ArenaDefinition arenaDefinition) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static <M extends Minigame> M createMinigame(MinigamesIntegration integration, Class<M> minigameClass, ArenaDefinition arenaDefinition) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         MinigameSettings settings = minigames.getOrDefault(minigameClass, null);
-        M minigame = minigameClass.getConstructor(JavaPlugin.class, MinigameSettings.class, ArenaDefinition.class).newInstance(plugin, settings, arenaDefinition);
+        M minigame = minigameClass.getConstructor(MinigamesIntegration.class, MinigameSettings.class, ArenaDefinition.class).newInstance(integration, settings, arenaDefinition);
         minigame.init();
         currentMinigames.add(minigame);
         return minigame;

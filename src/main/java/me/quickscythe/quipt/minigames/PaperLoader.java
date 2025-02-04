@@ -4,7 +4,6 @@ import io.papermc.paper.plugin.loader.PluginClasspathBuilder;
 import io.papermc.paper.plugin.loader.PluginLoader;
 import io.papermc.paper.plugin.loader.library.impl.JarLibrary;
 import io.papermc.paper.plugin.loader.library.impl.MavenLibraryResolver;
-import me.quickscythe.quipt.minigames.utils.json.SimpleJsonObject;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.repository.RemoteRepository;
@@ -13,12 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.Scanner;
 
 public class PaperLoader implements PluginLoader {
 
@@ -28,7 +23,6 @@ public class PaperLoader implements PluginLoader {
     public void classloader(PluginClasspathBuilder classpathBuilder) {
         File dependenciesFolder = new File("dependencies/quipt-paper");
         if (!dependenciesFolder.exists()) dependenciesFolder.mkdirs();
-//        File propertiesFile = new File(dependenciesFolder, "gradle.properties");
         Properties properties = new Properties();
         try {
             properties.load(getClass().getResourceAsStream("/gradle.properties"));

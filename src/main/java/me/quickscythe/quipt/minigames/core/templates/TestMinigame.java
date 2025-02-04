@@ -1,5 +1,6 @@
 package me.quickscythe.quipt.minigames.core.templates;
 
+import me.quickscythe.quipt.minigames.MinigamesIntegration;
 import me.quickscythe.quipt.minigames.core.annotations.MinigameStructure;
 import me.quickscythe.quipt.minigames.core.Minigame;
 import me.quickscythe.quipt.minigames.core.MinigameSettings;
@@ -23,8 +24,8 @@ public class TestMinigame extends Minigame {
 
     GameListener listener;
 
-    public TestMinigame(JavaPlugin plugin, MinigameSettings settings, ArenaDefinition arenaDefinition) throws IOException {
-        super(plugin, settings, arenaDefinition);
+    public TestMinigame(MinigamesIntegration integration, MinigameSettings settings, ArenaDefinition arenaDefinition) throws IOException {
+        super(integration, settings, arenaDefinition);
         listener = new GameListener();
     }
 

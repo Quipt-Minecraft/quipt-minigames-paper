@@ -1,5 +1,6 @@
 package me.quickscythe.quipt.minigames.core.templates;
 
+import me.quickscythe.quipt.minigames.MinigamesIntegration;
 import me.quickscythe.quipt.minigames.core.Minigame;
 import me.quickscythe.quipt.minigames.core.MinigameSettings;
 import me.quickscythe.quipt.minigames.core.annotations.MinigameStructure;
@@ -24,8 +25,8 @@ public class SkyWars extends Minigame {
     GameListener listener;
 
 
-    public SkyWars(JavaPlugin plugin, MinigameSettings settings, ArenaDefinition arenaDefinition) throws IOException {
-        super(plugin, settings, arenaDefinition);
+    public SkyWars(MinigamesIntegration integration, MinigameSettings settings, ArenaDefinition arenaDefinition) throws IOException {
+        super(integration, settings, arenaDefinition);
         listener = new GameListener();
         if(arenaDefinition.teams().length == 0) throw new IllegalArgumentException("No teams defined for arena");
 

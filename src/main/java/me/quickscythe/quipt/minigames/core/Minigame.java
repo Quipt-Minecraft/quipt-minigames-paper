@@ -1,11 +1,11 @@
 package me.quickscythe.quipt.minigames.core;
 
 
+import me.quickscythe.quipt.minigames.MinigamesIntegration;
 import me.quickscythe.quipt.minigames.core.arenas.Arena;
 import me.quickscythe.quipt.minigames.core.arenas.ArenaDefinition;
 import me.quickscythe.quipt.minigames.core.objects.MinigamePlayer;
 import me.quickscythe.quipt.minigames.core.teams.TeamDefinition;
-import me.quickscythe.quipt.minigames.utils.MinigamesUtils;
 import me.quickscythe.quipt.utils.chat.MessageUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -14,7 +14,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,20 +31,20 @@ public abstract class Minigame {
     private final List<UUID> spectators = new ArrayList<>();
     private final List<MinigamePlayer> participants = new ArrayList<>();
     private final MinigameSettings settings;
-    private final JavaPlugin plugin;
+    private final MinigamesIntegration integration;
     private final ArenaDefinition arenaDefinition;
     private final Arena arena;
     private final UUID id;
     private boolean open = false;
     private long started = 0;
 
-    public Minigame(JavaPlugin plugin, MinigameSettings settings, ArenaDefinition arenaDefinition) throws IOException {
+    public Minigame(MinigamesIntegration integration, MinigameSettings settings, ArenaDefinition arenaDefinition) throws IOException {
         this.id = UUID.randomUUID();
         this.settings = settings;
         this.arenaDefinition = arenaDefinition;
         this.arena = new Arena(arenaDefinition);
         arena.loadWorld();
-        this.plugin = plugin;
+        this.integration = integration;
 
     }
 
@@ -54,8 +53,8 @@ public abstract class Minigame {
     public abstract boolean check();
 
     public void end() {
-        if (MinigamesUtils.integration().plugin().isPresent())
-            Bukkit.getScheduler().runTaskLater(MinigamesUtils.integration().plugin().get(), new MinigameCountdown(
+        if (integration.plugin().isPresent())
+            Bukkit.getScheduler().runTaskLater(integration.plugin().get(), new MinigameCountdown(
                     this,
                     5,
                     null,
@@ -103,7 +102,8 @@ public abstract class Minigame {
     }
 
     public void init() {
-        plugin.getServer().getPluginManager().registerEvents(listener(), plugin);
+        if (integration.plugin().isPresent())
+            integration.plugin().get().getServer().getPluginManager().registerEvents(listener(), integration.plugin().get());
         open = true;
     }
 
@@ -116,20 +116,27 @@ public abstract class Minigame {
     }
 
     public void start() {
+        if (integration.plugin().isPresent()) {
+            for (UUID uid : players()) {
 
-        for (UUID uid : players()) {
-            Player player = plugin.getServer().getPlayer(uid);
-            if (player != null) {
-                arena().respawn(player, GameMode.SURVIVAL);
+                Player player = integration.plugin().get().getServer().getPlayer(uid);
+                if (player != null) {
+                    arena().respawn(player, GameMode.SURVIVAL);
+                }
             }
-        }
-        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new MinigameCountdown(this, 5, MinigameCountdown.Type.CHAT, "minigame.common.countdown", () -> players().size() > 1, () -> {
+
+            Bukkit.getScheduler().runTaskLaterAsynchronously(integration.plugin().get(), new MinigameCountdown(this, 5, MinigameCountdown.Type.CHAT, "minigame.common.countdown", () -> players().size() > 1, () -> {
+                started = System.currentTimeMillis();
+                open = false;
+            }, () -> {
+                end();
+                broadcast(text("Not enough players... Countdown has stopped.", NamedTextColor.RED));
+            }), 0);
+        } else {
             started = System.currentTimeMillis();
             open = false;
-        }, () -> {
-            end();
             broadcast(text("Not enough players... Countdown has stopped.", NamedTextColor.RED));
-        }), 0);
+        }
     }
 
     public void join(Player player, boolean spectate) {
@@ -164,15 +171,14 @@ public abstract class Minigame {
     }
 
     public void startCountdown() {
-        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, new MinigameCountdown(this, 10, MinigameCountdown.Type.CHAT, "minigame.common.countdown", () -> players().size() >= settings().minPlayers(), this::start, () -> broadcast(text("Not enough players... Countdown has stopped.", NamedTextColor.RED))), 0);
+        if (integration.plugin().isPresent())
+            Bukkit.getScheduler().runTaskLaterAsynchronously(integration.plugin().get(), new MinigameCountdown(this, 10, MinigameCountdown.Type.CHAT, "minigame.common.countdown", () -> players().size() >= settings().minPlayers(), this::start, () -> broadcast(text("Not enough players... Countdown has stopped.", NamedTextColor.RED))), 0);
     }
 
     public void leave(Player player) {
         MinigamePlayer gamePlayer = player(player);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            player.teleport(gamePlayer.returnLocation());
-
-        }, 2);
+        if (integration.plugin().isPresent())
+            Bukkit.getScheduler().runTaskLater(integration.plugin().get(), () -> player.teleport(gamePlayer.returnLocation()), 2);
         player.setGameMode(GameMode.SURVIVAL);
         player.setHealth(player.getHealthScale());
 
@@ -232,9 +238,10 @@ public abstract class Minigame {
         players().remove(player.getUniqueId());
         if (!spectators().contains(player.getUniqueId())) spectators().add(player.getUniqueId());
         if (player.getLocation().y() <= 0) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                player.teleport(arenaDefinition.locations().lobby().location(arena));
-            }, 1);
+            if (integration.plugin().isPresent())
+                Bukkit.getScheduler().runTaskLater(integration.plugin().get(), () -> {
+                    player.teleport(arenaDefinition.locations().lobby().location(arena));
+                }, 1);
         }
         player.setGameMode(GameMode.SPECTATOR);
 

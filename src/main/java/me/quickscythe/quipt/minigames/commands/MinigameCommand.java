@@ -63,7 +63,7 @@ public class MinigameCommand extends CommandExecutor {
                                             Class<? extends Minigame> minigame = context.getArgument("type", Class.class);
                                             ArenaDefinition arena = context.getArgument("arena", ArenaDefinition.class);
                                             try {
-                                                MinigameManager.createMinigame(getPlugin(), minigame, arena);
+                                                MinigameManager.createMinigame(MinigamesUtils.integration(), minigame, arena);
                                                 context.getSource().getSender().sendMessage(text("Minigame created.", NamedTextColor.GREEN));
                                             } catch (NoSuchMethodException | InvocationTargetException |
                                                     InstantiationException | IllegalAccessException e) {
